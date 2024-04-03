@@ -37,12 +37,17 @@ const ShoeCard = ({
         <ImageWrapper>
           <Image alt="" src={imageSrc} />
         </ImageWrapper>
-        {variant === 'on-sale' ? <Flag style={{ '--color': COLORS.primary }}>Sale</Flag> : null}
-        {variant === 'new-release' ? <Flag style={{ '--color': COLORS.secondary }}>Just Released!</Flag> : null}
+        {variant === 'on-sale' && <SaleFlag>Sale</SaleFlag>}
+        {variant === 'new-release' && <NewFlag>Just Released!</NewFlag>}
         <Spacer size={12} />
         <Row>
           <Name>{name}</Name>
-          <Price>{formatPrice(price)}</Price>
+          <Price style={{ 
+            '--color': variant === 'on-sale' ? COLORS.gray[700]: undefined,
+            '--text-decoration': variant === 'on-sale' ? 'line-through': undefined
+          }}>
+            {formatPrice(price)}
+          </Price>
         </Row>
         <Row>
           <ColorInfo>{pluralize('Color', numOfColors)}</ColorInfo>
@@ -58,9 +63,6 @@ const ShoeCard = ({
 const Link = styled.a`
   text-decoration: none;
   color: inherit;
-  display: inline-block;
-
-  flex: 1 1 25%;
 `;
 
 const Wrapper = styled.article`
@@ -73,7 +75,7 @@ const ImageWrapper = styled.div`
 
 const Image = styled.img`
   width: 100%;
-  border-radius: 16px 16px 0 0;
+  border-radius: 16px 16px 4px 4px;
 `;
 
 const Row = styled.div`
@@ -87,7 +89,10 @@ const Name = styled.h3`
   color: ${COLORS.gray[900]};
 `;
 
-const Price = styled.span``;
+const Price = styled.span`
+  color: var(--color);
+  text-decoration: var(--text-decoration);
+`;
 
 const ColorInfo = styled.p`
   color: ${COLORS.gray[700]};
@@ -102,13 +107,22 @@ const Flag = styled.div`
   position: absolute;
   top: 12px;
   right: -4px;
-  padding: 8px 12px;
-
-  background-color: var(--color);
+  padding: 0 10px;
+  height: 32px;
   width: fit-content;
   border-radius: 2px;
+  line-height: 32px;
   color: ${COLORS.white};
   font-weight: ${WEIGHTS.bold};
+  font-size: {14/16}rem;
+`;
+
+const SaleFlag = styled(Flag)`
+  background-color: ${COLORS.primary};
+`;
+
+const NewFlag = styled(Flag)`
+  background-color: ${COLORS.secondary};
 `;
 
 export default ShoeCard;
